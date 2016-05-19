@@ -4,9 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-
-	"github.com/oceanhq/streams/platform"
-	"github.com/oceanhq/streams/platform/memory"
 )
 
 func jsonResponder(f func(r *http.Request) (result interface{}, statusCode int)) func(w http.ResponseWriter, r *http.Request) {
@@ -33,7 +30,3 @@ func asJsonError(err error) *jsonError {
 type jsonError struct {
 	Error string `json:"error"`
 }
-
-var (
-	platformImpl platform.Platform = &memory.InMemoryPlatform{}
-)
