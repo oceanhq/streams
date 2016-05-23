@@ -95,7 +95,7 @@ func streamGet(r *http.Request) (interface{}, int) {
 		Name:     stream.Name}
 
 	// Return a success
-	return res, http.StatusCreated
+	return res, http.StatusOK
 }
 
 type streamDocument struct {
