@@ -47,7 +47,7 @@ func recordCreate(r *http.Request) (interface{}, int) {
 		code := http.StatusInternalServerError
 
 		// In case the client supplies a non-existant stream, bad request
-		if _, ok := err.(platform.StreamNotFoundError); ok {
+		if _, ok := err.(*platform.ErrStreamNotFound); ok {
 			code = http.StatusBadRequest
 		}
 
@@ -77,6 +77,14 @@ func recordsIndex(r *http.Request) (interface{}, int) {
 	recs, err := platformImpl.GetRecords(streamId, cursorId)
 	if err != nil {
 		code := http.StatusInternalServerError
+
+		if _, ok := err.(*platform.ErrInvalidParam); ok {
+			code = http.StatusBadRequest
+		} else if _, ok := err.(*platform.ErrStreamNotFound); ok {
+			code = http.StatusNotFound
+		} else if _, ok := err.(*platform.ErrCursorNotFound); ok {
+			code = http.StatusBadRequest
+		}
 
 		return asJsonError(err), code
 	}

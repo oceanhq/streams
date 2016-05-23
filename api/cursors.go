@@ -20,7 +20,7 @@ func cursorCreate(r *http.Request) (interface{}, int) {
 		code := http.StatusInternalServerError
 
 		// In case the client supplies a non-existant stream, bad request
-		if _, ok := err.(platform.StreamNotFoundError); ok {
+		if _, ok := err.(*platform.ErrStreamNotFound); ok {
 			code = http.StatusBadRequest
 		}
 

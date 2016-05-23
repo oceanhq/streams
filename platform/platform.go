@@ -1,6 +1,9 @@
 package platform
 
-import "time"
+import (
+	"fmt"
+	"time"
+)
 
 type Platform interface {
 	CreateStream(name string) (*Stream, error)
@@ -30,8 +33,30 @@ type Record struct {
 	Timestamp   time.Time
 }
 
-type InvalidParamError error
+type ErrInvalidParam struct {
+	Param string
+	Value string
+	Err   error
+}
 
-type StreamNotFoundError error
+func (e *ErrInvalidParam) Error() string {
+	return fmt.Sprintf("\"%s\" is not a valid value for param \"%s\". %s", e.Value, e.Param, e.Err.Error())
+}
 
-type CursorNotFoundError error
+type ErrStreamNotFound struct {
+	SearchParam string
+	Value       string
+}
+
+func (e *ErrStreamNotFound) Error() string {
+	return fmt.Sprintf("A stream with the %s \"%s\" does not exist.", e.SearchParam, e.Value)
+}
+
+type ErrCursorNotFound struct {
+	SearchParam string
+	Value       string
+}
+
+func (e *ErrCursorNotFound) Error() string {
+	return fmt.Sprintf("A cursor with the %s \"%s\" does not exist.", e.SearchParam, e.Value)
+}

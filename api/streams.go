@@ -37,7 +37,7 @@ func streamCreate(r *http.Request) (interface{}, int) {
 
 		// platform.InvalidParamErrors imply that the client didn't provide a required value.
 		// Details will be in error text.
-		if _, ok := err.(platform.InvalidParamError); ok {
+		if _, ok := err.(*platform.ErrInvalidParam); ok {
 			code = http.StatusBadRequest
 		}
 
@@ -79,7 +79,15 @@ func streamGet(r *http.Request) (interface{}, int) {
 
 	stream, err := platformImpl.GetStream(streamId)
 	if err != nil {
-		return asJsonError(err), http.StatusInternalServerError
+		code := http.StatusInternalServerError
+
+		if _, ok := err.(*platform.ErrStreamNotFound); ok {
+			code = http.StatusNotFound
+		} else if _, ok := err.(*platform.ErrInvalidParam); ok {
+			code = http.StatusBadRequest
+		}
+
+		return asJsonError(err), code
 	}
 
 	res := &streamDocument{

@@ -8,7 +8,6 @@ import (
 	"crypto/sha1"
 	"encoding/hex"
 	"errors"
-	"fmt"
 	"math/big"
 	"time"
 
@@ -29,7 +28,7 @@ type InMemoryPlatform struct {
 
 func (p *InMemoryPlatform) CreateStream(name string) (*platform.Stream, error) {
 	if name == "" {
-		return nil, platform.InvalidParamError(errors.New("Invalid param: `name` must not be empty"))
+		return nil, &platform.ErrInvalidParam{Param: "name", Value: "", Err: errors.New("Must not be empty.")}
 	}
 
 	id, err := generateId()
@@ -59,9 +58,9 @@ func (p *InMemoryPlatform) ListStreams() ([]platform.Stream, error) {
 func (p *InMemoryPlatform) GetStream(streamId string) (*platform.Stream, error) {
 	stream, err := p.findStream(streamId)
 	if err != nil {
-		return nil, platform.InvalidParamError(fmt.Errorf("\"%s\" is not a valid stream ID. %s", streamId, err.Error()))
+		return nil, &platform.ErrInvalidParam{Param: "streamId", Value: streamId, Err: err}
 	} else if stream == nil {
-		return nil, platform.StreamNotFoundError(fmt.Errorf("The stream \"%s\" does not exist.", streamId))
+		return nil, &platform.ErrStreamNotFound{SearchParam: "ID", Value: streamId}
 	}
 
 	return stream.toExt(), nil
@@ -70,9 +69,9 @@ func (p *InMemoryPlatform) GetStream(streamId string) (*platform.Stream, error) 
 func (p *InMemoryPlatform) CreateCursor(streamId string) (*platform.Cursor, error) {
 	stream, err := p.findStream(streamId)
 	if err != nil {
-		return nil, platform.InvalidParamError(fmt.Errorf("\"%s\" is not a valid stream ID.", streamId))
+		return nil, &platform.ErrInvalidParam{Param: "streamId", Value: streamId, Err: err}
 	} else if stream == nil {
-		return nil, platform.StreamNotFoundError(fmt.Errorf("The stream \"%s\" does not exist.", streamId))
+		return nil, &platform.ErrStreamNotFound{SearchParam: "ID", Value: streamId}
 	}
 
 	id, err := generateId()
@@ -93,9 +92,9 @@ func (p *InMemoryPlatform) CreateCursor(streamId string) (*platform.Cursor, erro
 func (p *InMemoryPlatform) CreateRecord(streamId string, content []byte) (*platform.Record, error) {
 	stream, err := p.findStream(streamId)
 	if err != nil {
-		return nil, platform.InvalidParamError(fmt.Errorf("\"%s\" is not a valid stream ID. %s", streamId, err.Error()))
+		return nil, &platform.ErrInvalidParam{Param: "streamId", Value: streamId, Err: err}
 	} else if stream == nil {
-		return nil, platform.StreamNotFoundError(fmt.Errorf("The stream \"%s\" does not exist.", streamId))
+		return nil, &platform.ErrStreamNotFound{SearchParam: "ID", Value: streamId}
 	}
 
 	record := &record{
@@ -117,16 +116,16 @@ func (p *InMemoryPlatform) CreateRecord(streamId string, content []byte) (*platf
 func (p *InMemoryPlatform) GetRecords(streamId string, cursorId string) ([]platform.Record, error) {
 	stream, err := p.findStream(streamId)
 	if err != nil {
-		return nil, platform.InvalidParamError(fmt.Errorf("\"%s\" is not a valid stream ID. %s", streamId, err.Error()))
+		return nil, &platform.ErrInvalidParam{Param: "streamId", Value: streamId, Err: err}
 	} else if stream == nil {
-		return nil, platform.StreamNotFoundError(fmt.Errorf("The stream \"%s\" does not exist.", streamId))
+		return nil, &platform.ErrStreamNotFound{SearchParam: "ID", Value: streamId}
 	}
 
 	cursor, err := p.findCursor(cursorId)
 	if err != nil {
-		return nil, platform.InvalidParamError(fmt.Errorf("\"%s\" is not a valid cursor ID. %s", cursorId, err.Error()))
+		return nil, &platform.ErrInvalidParam{Param: "cursorId", Value: cursorId, Err: err}
 	} else if cursor == nil {
-		return nil, platform.CursorNotFoundError(fmt.Errorf("The cursor \"%s\" does not exist.", cursorId))
+		return nil, &platform.ErrCursorNotFound{SearchParam: "ID", Value: cursorId}
 	}
 
 	res := []platform.Record{}
