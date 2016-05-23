@@ -56,6 +56,17 @@ func (p *InMemoryPlatform) ListStreams() ([]platform.Stream, error) {
 	return out, nil
 }
 
+func (p *InMemoryPlatform) GetStream(streamId string) (*platform.Stream, error) {
+	stream, err := p.findStream(streamId)
+	if err != nil {
+		return nil, platform.InvalidParamError(fmt.Errorf("\"%s\" is not a valid stream ID. %s", streamId, err.Error()))
+	} else if stream == nil {
+		return nil, platform.StreamNotFoundError(fmt.Errorf("The stream \"%s\" does not exist.", streamId))
+	}
+
+	return stream.toExt(), nil
+}
+
 func (p *InMemoryPlatform) CreateCursor(streamId string) (*platform.Cursor, error) {
 	stream, err := p.findStream(streamId)
 	if err != nil {

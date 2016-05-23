@@ -5,6 +5,7 @@ import "time"
 type Platform interface {
 	CreateStream(name string) (*Stream, error)
 	ListStreams() ([]Stream, error)
+	GetStream(streamId string) (*Stream, error)
 	CreateCursor(streamId string) (*Cursor, error)
 	CreateRecord(streamId string, content []byte) (*Record, error)
 	GetRecords(streamId string, cursorId string) ([]Record, error)

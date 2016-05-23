@@ -15,6 +15,9 @@ func (p *SqsPlatform) CreateStream(name string) (*platform.Stream, error) {
 func (p *SqsPlatform) ListStreams() ([]platform.Stream, error) {
 	return nil, errors.New("Function not implemented")
 }
+func (p *SqsPlatform) GetStream(streamId string) (*platform.Stream, error) {
+	return nil, errors.New("Function not implemented")
+}
 func (p *SqsPlatform) CreateCursor(streamId string) (*platform.Cursor, error) {
 	return nil, errors.New("Function not implemented")
 }

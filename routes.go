@@ -13,6 +13,8 @@ func buildRoutes() http.Handler {
 		Methods("POST")
 	r.HandleFunc("/streams", api.StreamCollectionGetHandler).
 		Methods("GET")
+	r.HandleFunc("/streams/{stream_id}", api.StreamDocumentGetHandler).
+		Methods("GET")
 	r.HandleFunc("/streams/{stream_id}/records", api.RecordCollectionGetHandler).
 		Methods("GET")
 	r.HandleFunc("/streams/{stream_id}/records", api.RecordCollectionPostHandler).

@@ -7,12 +7,14 @@ import (
 
 	"fmt"
 
+	"github.com/gorilla/mux"
 	"github.com/oceanhq/streams/platform"
 )
 
 var (
 	StreamCollectionPostHandler = jsonResponder(streamCreate)
 	StreamCollectionGetHandler  = jsonResponder(streamsIndex)
+	StreamDocumentGetHandler    = jsonResponder(streamGet)
 )
 
 func streamCreate(r *http.Request) (interface{}, int) {
@@ -68,6 +70,24 @@ func streamsIndex(r *http.Request) (interface{}, int) {
 	}
 
 	return list, http.StatusOK
+}
+
+func streamGet(r *http.Request) (interface{}, int) {
+	// Get stream ID from path
+	vars := mux.Vars(r)
+	streamId := vars["stream_id"]
+
+	stream, err := platformImpl.GetStream(streamId)
+	if err != nil {
+		return asJsonError(err), http.StatusInternalServerError
+	}
+
+	res := &streamDocument{
+		StreamId: stream.Id,
+		Name:     stream.Name}
+
+	// Return a success
+	return res, http.StatusCreated
 }
 
 type streamDocument struct {
