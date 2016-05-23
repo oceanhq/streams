@@ -10,8 +10,11 @@ func jsonResponder(f func(r *http.Request) (result interface{}, statusCode int))
 	return func(w http.ResponseWriter, r *http.Request) {
 		res, code := f(r)
 
-		w.WriteHeader(code)
+		// Headers MUST be set before WriteHeader or Write is called.
 		w.Header().Set("Content-type", "application/json")
+
+		// WriteHeader MUST be set before any calls to Write.
+		w.WriteHeader(code)
 
 		output, err := json.Marshal(res)
 		if err != nil {
