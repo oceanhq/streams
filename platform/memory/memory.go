@@ -125,7 +125,7 @@ func (p *InMemoryPlatform) GetRecords(streamId string, cursorId string) ([]platf
 	if err != nil {
 		return nil, &platform.ErrInvalidParam{Param: "cursorId", Value: cursorId, Err: err}
 	} else if cursor == nil {
-		return nil, &platform.ErrCursorNotFound{SearchParam: "ID", Value: cursorId}
+		return nil, &platform.ErrCursorNotFound{CursorID: cursorId, StreamID: streamId}
 	}
 
 	res := []platform.Record{}

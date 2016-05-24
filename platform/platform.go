@@ -53,10 +53,10 @@ func (e *ErrStreamNotFound) Error() string {
 }
 
 type ErrCursorNotFound struct {
-	SearchParam string
-	Value       string
+	CursorID string
+	StreamID string
 }
 
 func (e *ErrCursorNotFound) Error() string {
-	return fmt.Sprintf("A cursor with the %s \"%s\" does not exist.", e.SearchParam, e.Value)
+	return fmt.Sprintf("A cursor with ID \"%s\" does not exist for a stream with ID \"%s\".", e.CursorID, e.StreamID)
 }
