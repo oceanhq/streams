@@ -12,3 +12,21 @@ This service should work with minimal setup
   * `gin`
 3. Test the server
   * `curl http://127.0.0.1:3000/streams`
+
+## Running on SNS/SQS
+
+To run on SQS/SNS you'll need to provide a valid AWS account #, Access Key ID, and Secret Access Key in your .env.
+
+Additionally, the app expects two DynamoDB tables on that account:
+
+- ocean-streams
+- ocean-cursors
+
+Finally, you'll want to build with the `sqs` tag. To manage this, I recommend using my fork of gin.
+
+```sh
+go get github.com/tobyjsullivan/gin
+go install github.com/tobyjsullivan/gin
+gin -tags sqs
+```
+
