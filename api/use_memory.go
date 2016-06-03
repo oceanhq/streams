@@ -1,4 +1,4 @@
-// +build !sqs
+// +build !sqs,!heroku
 
 package api
 
