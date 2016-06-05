@@ -4,7 +4,7 @@ A quick proof-of-concept implementation of the Streams service. See the [docs fo
 
 ## Getting Started
 
-This service should work with minimal setup
+This service should work with minimal setup if you already have your Go environment set up. If not, see the [Go Getting Started guide](https://golang.org/doc/install).
 
 1. Install gin
   * `go get github.com/codegangsta/gin`
